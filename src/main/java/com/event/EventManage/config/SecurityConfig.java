@@ -18,6 +18,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.config.Customizer;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -30,8 +35,7 @@ public class SecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(customUserDetailsService);
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(customUserDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
@@ -47,33 +51,45 @@ public class SecurityConfig {
     }
 
     @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .cors(AbstractHttpConfigurer::disable)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/items/**").permitAll()
-                .requestMatchers("/api/bookings/**").hasAnyRole("CUSTOMER", "ADMIN", "STAFF")
-                .requestMatchers("/api/orders/**").hasAnyRole("CUSTOMER", "ADMIN", "STAFF")
-                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "STAFF")
-                .requestMatchers("/api/offline-sales/**").hasAnyRole("ADMIN", "STAFF")
-                .requestMatchers("/api/walk-in-customers/**").hasAnyRole("ADMIN", "STAFF")
-                .requestMatchers(HttpMethod.POST, "/api/items/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/items/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/items/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/categories/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-            );
-        
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/items/**").permitAll()
+                        .requestMatchers("/api/bookings/**").hasAnyRole("CUSTOMER", "ADMIN", "STAFF")
+                        .requestMatchers("/api/orders/**").hasAnyRole("CUSTOMER", "ADMIN", "STAFF")
+                        .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "STAFF")
+                        .requestMatchers("/api/offline-sales/**").hasAnyRole("ADMIN", "STAFF")
+                        .requestMatchers("/api/walk-in-customers/**").hasAnyRole("ADMIN", "STAFF")
+                        .requestMatchers(HttpMethod.POST, "/api/items/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/items/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/items/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasRole("ADMIN")
+                        .anyRequest().authenticated());
+
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        
+
         return http.build();
     }
 }
