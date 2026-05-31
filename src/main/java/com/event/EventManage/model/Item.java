@@ -31,6 +31,11 @@ public class Item {
     @com.fasterxml.jackson.annotation.JsonBackReference
     private Category category;
 
+    @Transient
+    @com.fasterxml.jackson.annotation.JsonProperty("categoryId")
+    private String tempCategoryId;
+
+
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
