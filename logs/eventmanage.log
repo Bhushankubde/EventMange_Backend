@@ -1501,3 +1501,184 @@ Caused by: java.sql.SQLException: Access denied for user 'root'@'localhost' (usi
 2026-05-23 13:33:30.452 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2026-05-23 13:33:30.458 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 2026-05-23 13:33:30.493 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-23 13:33:46.364 [main] INFO  c.e.E.EventManageApplication - Starting EventManageApplication using Java 25 with PID 25100 (D:\EventDepo\backend\target\classes started by HairWizard in D:\EventDepo\backend)
+2026-05-23 13:33:46.367 [main] DEBUG c.e.E.EventManageApplication - Running with Spring Boot v3.5.14, Spring v6.2.18
+2026-05-23 13:33:46.368 [main] INFO  c.e.E.EventManageApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-23 13:33:47.497 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-23 13:33:47.616 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 109 ms. Found 8 JPA repository interfaces.
+2026-05-23 13:33:48.479 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-23 13:33:48.510 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-05-23 13:33:48.513 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-05-23 13:33:48.646 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-05-23 13:33:48.647 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2149 ms
+2026-05-23 13:33:48.821 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-23 13:33:48.899 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.49.Final
+2026-05-23 13:33:48.962 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-23 13:33:49.262 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-23 13:33:49.400 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-23 13:33:49.799 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6c1b82cd
+2026-05-23 13:33:49.801 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-23 13:33:49.870 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-23 13:33:49.886 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.39
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-23 13:33:51.145 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-23 13:33:51.291 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-23 13:33:51.594 [main] DEBUG c.e.E.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-05-23 13:33:51.675 [main] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-05-23 13:33:51.676 [main] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-05-23 13:33:52.007 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-23 13:33:52.720 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-23 13:33:52.730 [main] INFO  c.e.E.EventManageApplication - Started EventManageApplication in 6.857 seconds (process running for 7.412)
+2026-05-23 13:34:22.826 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-23 13:34:22.827 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-05-23 13:34:22.836 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 6 ms
+2026-05-23 13:34:23.056 [http-nio-8080-exec-7] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 13:34:23.057 [http-nio-8080-exec-7] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 13:34:23.459 [http-nio-8080-exec-4] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 13:34:23.460 [http-nio-8080-exec-4] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 13:35:14.993 [http-nio-8080-exec-3] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 13:35:14.994 [http-nio-8080-exec-3] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 13:35:15.028 [http-nio-8080-exec-8] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 13:35:15.030 [http-nio-8080-exec-8] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 13:35:20.389 [http-nio-8080-exec-5] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 13:35:20.390 [http-nio-8080-exec-5] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 13:35:20.431 [http-nio-8080-exec-1] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 13:35:20.433 [http-nio-8080-exec-1] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 13:35:46.735 [http-nio-8080-exec-2] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 13:35:46.736 [http-nio-8080-exec-2] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 13:35:46.762 [http-nio-8080-exec-6] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 13:35:46.764 [http-nio-8080-exec-6] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 13:38:19.873 [http-nio-8080-exec-9] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 13:38:19.874 [http-nio-8080-exec-9] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 13:38:21.957 [http-nio-8080-exec-1] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 13:38:21.958 [http-nio-8080-exec-1] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 13:38:23.796 [http-nio-8080-exec-4] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 13:38:23.798 [http-nio-8080-exec-4] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 13:38:25.399 [http-nio-8080-exec-6] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 13:38:25.400 [http-nio-8080-exec-6] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 13:42:00.758 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-23 13:42:00.770 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-05-23 13:42:00.784 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-23 13:42:00.790 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-23 13:42:00.824 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-23 15:04:30.603 [main] INFO  c.e.E.EventManageApplication - Starting EventManageApplication using Java 25 with PID 11932 (D:\EventDepo\backend\target\classes started by HairWizard in D:\EventDepo\backend)
+2026-05-23 15:04:30.606 [main] DEBUG c.e.E.EventManageApplication - Running with Spring Boot v3.5.14, Spring v6.2.18
+2026-05-23 15:04:30.608 [main] INFO  c.e.E.EventManageApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-23 15:04:31.858 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-23 15:04:31.972 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 104 ms. Found 8 JPA repository interfaces.
+2026-05-23 15:04:32.678 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-23 15:04:32.700 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-05-23 15:04:32.701 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-05-23 15:04:32.795 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-05-23 15:04:32.796 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2111 ms
+2026-05-23 15:04:33.005 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-23 15:04:33.084 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.49.Final
+2026-05-23 15:04:33.148 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-23 15:04:33.533 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-23 15:04:33.597 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-23 15:04:34.183 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@68479e8b
+2026-05-23 15:04:34.187 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-23 15:04:34.321 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-23 15:04:34.346 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.39
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-23 15:04:35.760 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-23 15:04:35.968 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-23 15:04:36.412 [main] DEBUG c.e.E.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-05-23 15:04:36.502 [main] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-05-23 15:04:36.504 [main] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-05-23 15:04:36.873 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-23 15:04:37.676 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-23 15:04:37.684 [main] INFO  c.e.E.EventManageApplication - Started EventManageApplication in 7.993 seconds (process running for 8.663)
+2026-05-23 15:09:35.715 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-23 15:09:35.716 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-05-23 15:09:35.719 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-05-23 15:13:09.697 [http-nio-8080-exec-4] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:13:09.698 [http-nio-8080-exec-4] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:13:09.862 [http-nio-8080-exec-5] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:13:09.863 [http-nio-8080-exec-5] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:13:17.506 [http-nio-8080-exec-10] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:13:17.507 [http-nio-8080-exec-10] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:13:17.525 [http-nio-8080-exec-10] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:13:17.526 [http-nio-8080-exec-10] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:13:32.541 [http-nio-8080-exec-8] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 1253 ms
+2026-05-23 15:17:25.531 [http-nio-8080-exec-5] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:17:25.532 [http-nio-8080-exec-5] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:17:25.554 [http-nio-8080-exec-6] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:17:25.556 [http-nio-8080-exec-6] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:17:32.257 [http-nio-8080-exec-9] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:17:32.259 [http-nio-8080-exec-9] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:17:32.280 [http-nio-8080-exec-3] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:17:32.281 [http-nio-8080-exec-3] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:17:53.610 [http-nio-8080-exec-4] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:17:53.612 [http-nio-8080-exec-4] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:17:53.639 [http-nio-8080-exec-2] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:17:53.640 [http-nio-8080-exec-2] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:21:00.487 [http-nio-8080-exec-9] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:21:00.488 [http-nio-8080-exec-9] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:21:00.505 [http-nio-8080-exec-3] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:21:00.506 [http-nio-8080-exec-3] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:23:33.369 [http-nio-8080-exec-6] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:23:33.370 [http-nio-8080-exec-6] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:23:33.396 [http-nio-8080-exec-5] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:23:33.397 [http-nio-8080-exec-5] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:24:09.604 [http-nio-8080-exec-9] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:24:09.605 [http-nio-8080-exec-9] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:24:09.632 [http-nio-8080-exec-3] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:24:09.634 [http-nio-8080-exec-3] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:24:12.894 [http-nio-8080-exec-8] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:24:12.896 [http-nio-8080-exec-8] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:24:12.935 [http-nio-8080-exec-1] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:24:12.937 [http-nio-8080-exec-1] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:24:15.713 [http-nio-8080-exec-6] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:24:15.714 [http-nio-8080-exec-6] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:24:15.736 [http-nio-8080-exec-5] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:24:15.738 [http-nio-8080-exec-5] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:24:18.303 [http-nio-8080-exec-7] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:24:18.304 [http-nio-8080-exec-7] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:24:18.335 [http-nio-8080-exec-7] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:24:18.336 [http-nio-8080-exec-7] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:24:23.984 [http-nio-8080-exec-8] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:24:23.986 [http-nio-8080-exec-8] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:24:24.009 [http-nio-8080-exec-1] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:24:24.009 [http-nio-8080-exec-1] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:24:36.193 [http-nio-8080-exec-6] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:24:36.194 [http-nio-8080-exec-6] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:24:36.222 [http-nio-8080-exec-5] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:24:36.229 [http-nio-8080-exec-5] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:25:01.891 [http-nio-8080-exec-9] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:25:01.892 [http-nio-8080-exec-9] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:25:01.918 [http-nio-8080-exec-3] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:25:01.921 [http-nio-8080-exec-3] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:25:08.930 [http-nio-8080-exec-4] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:25:08.931 [http-nio-8080-exec-4] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:25:08.955 [http-nio-8080-exec-2] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:25:08.956 [http-nio-8080-exec-2] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:25:24.761 [http-nio-8080-exec-10] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:25:24.762 [http-nio-8080-exec-10] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:25:24.784 [http-nio-8080-exec-7] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:25:24.786 [http-nio-8080-exec-7] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:25:27.610 [http-nio-8080-exec-9] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:25:27.611 [http-nio-8080-exec-9] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:25:27.638 [http-nio-8080-exec-3] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:25:27.640 [http-nio-8080-exec-3] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:25:32.206 [http-nio-8080-exec-4] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:25:32.207 [http-nio-8080-exec-4] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:25:32.230 [http-nio-8080-exec-2] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-05-23 15:25:32.231 [http-nio-8080-exec-2] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-05-23 15:33:59.437 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-23 15:33:59.452 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-05-23 15:33:59.465 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-23 15:33:59.477 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-23 15:33:59.494 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
