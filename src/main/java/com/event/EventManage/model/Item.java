@@ -32,8 +32,12 @@ public class Item {
     private Category category;
 
     @Transient
-    @com.fasterxml.jackson.annotation.JsonProperty("categoryId")
     private String tempCategoryId;
+
+    @com.fasterxml.jackson.annotation.JsonProperty("categoryId")
+    public String getCategoryId() {
+        return category != null ? category.getId() : tempCategoryId;
+    }
 
 
     @Column(nullable = false, precision = 10, scale = 2)
