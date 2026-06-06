@@ -18,7 +18,39 @@ public class ItemService {
     
     public List<Item> getAllItems() { 
         log.info("Fetching all items");
-        return itemRepository.findAll(); 
+        List<Item> items = itemRepository.findAll(); 
+        for (Item item : items) {
+            if (item.getCategory() != null) {
+                item.setTempCategoryId(item.getCategory().getId());
+            }
+        }
+        return items;
+    }
+
+    public List<Item> getItems(String categoryId, String search) {
+        log.info("Fetching items with categoryId: {}, search: {}", categoryId, search);
+        List<Item> items;
+        if (categoryId != null && !categoryId.trim().isEmpty() && !categoryId.equalsIgnoreCase("all")) {
+            if (search != null && !search.trim().isEmpty()) {
+                items = itemRepository.findByCategoryIdAndNameContainingIgnoreCase(categoryId, search);
+            } else {
+                items = itemRepository.findByCategoryId(categoryId);
+            }
+        } else {
+            if (search != null && !search.trim().isEmpty()) {
+                items = itemRepository.findByNameContainingIgnoreCase(search);
+            } else {
+                items = itemRepository.findAll();
+            }
+        }
+        
+        for (Item item : items) {
+            if (item.getCategory() != null) {
+                item.setTempCategoryId(item.getCategory().getId());
+            }
+        }
+        
+        return items;
     }
     
     public Item getItemById(String id) {
