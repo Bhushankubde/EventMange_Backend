@@ -40,12 +40,11 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<AuthResponse>> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<ApiResponse<Void>> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         log.info("Attempting registration for user: {}", registerRequest.getEmail());
-        User user = authService.register(registerRequest);
-        AuthResponse authResponse = authService.login(new LoginRequest(registerRequest.getEmail(), registerRequest.getPassword()));
-        log.info("User {} successfully registered and logged in", registerRequest.getEmail());
-        return new ResponseEntity<>(ApiResponse.success(authResponse, "User registered successfully", HttpStatus.CREATED.value()), HttpStatus.CREATED);
+        authService.register(registerRequest);
+        log.info("User {} successfully registered", registerRequest.getEmail());
+        return new ResponseEntity<>(ApiResponse.success(null, "User registered successfully", HttpStatus.CREATED.value()), HttpStatus.CREATED);
     }
 
     @PostMapping("/refreshtoken")
