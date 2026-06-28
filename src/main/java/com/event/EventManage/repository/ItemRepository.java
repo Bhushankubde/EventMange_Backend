@@ -15,4 +15,6 @@ public interface ItemRepository extends JpaRepository<Item, String> {
     List<Item> findByCategoryIdAndNameContainingIgnoreCase(@Param("categoryId") String categoryId, @Param("name") String name);
 
     List<Item> findByNameContainingIgnoreCase(String name);
+
+    long countByAvailable(boolean available);
 }

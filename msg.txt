@@ -1,0 +1,19 @@
+feat: Admin Dashboard Stats API
+
+The backend /api/admin/stats endpoint has been fully implemented.
+
+Changes Made
+1. DTOs
+[NEW] AdminStatsDto.java: Created to encapsulate the 4 required fields (totalRevenue, totalBookings, activeItems, newCustomers).
+
+2. Repositories
+[MODIFY] OrderRepository.java: Added @Query for sumTotalAmount() to calculate online revenue.
+[MODIFY] OfflineSaleRepository.java: Added @Query for sumTotalAmount() to calculate offline revenue.
+[MODIFY] ItemRepository.java: Added countByAvailable(boolean available).
+[MODIFY] UserRepository.java: Added countByRole(Role role).
+
+3. Service Layer
+[NEW] AdminService.java: Created to coordinate the queries. It safely handles null values when summing revenues (in case there are no orders yet) and populates the AdminStatsDto.
+
+4. Controller Layer
+[NEW] AdminController.java: Created the /api/admin/stats endpoint, secured it with @PreAuthorize("hasRole('ADMIN')"), and wrapped the response in the standard ApiResponse.success().
