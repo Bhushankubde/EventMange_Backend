@@ -1540,3 +1540,96 @@ Caused by: java.sql.SQLException: Access denied for user 'root'@'localhost' (usi
 2026-06-28 13:38:07.382 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2026-06-28 13:38:07.388 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 2026-06-28 13:38:07.405 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-06-28 14:44:51.400 [main] INFO  c.e.E.EventManageApplication - Starting EventManageApplication using Java 25 with PID 25104 (D:\EventDepo\backend\target\classes started by HairWizard in D:\EventDepo\backend)
+2026-06-28 14:44:51.402 [main] DEBUG c.e.E.EventManageApplication - Running with Spring Boot v3.5.14, Spring v6.2.18
+2026-06-28 14:44:51.403 [main] INFO  c.e.E.EventManageApplication - No active profile set, falling back to 1 default profile: "default"
+2026-06-28 14:44:52.385 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-28 14:44:52.481 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 82 ms. Found 8 JPA repository interfaces.
+2026-06-28 14:44:53.138 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-06-28 14:44:53.155 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-06-28 14:44:53.156 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-06-28 14:44:53.252 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-06-28 14:44:53.253 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1799 ms
+2026-06-28 14:44:53.421 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-28 14:44:53.494 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.49.Final
+2026-06-28 14:44:53.551 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-06-28 14:44:53.941 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-28 14:44:53.979 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-06-28 14:44:54.443 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@369a95a5
+2026-06-28 14:44:54.446 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-06-28 14:44:54.513 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-28 14:44:54.533 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.39
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-28 14:44:55.772 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-28 14:44:55.912 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-28 14:44:56.220 [main] DEBUG c.e.E.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-06-28 14:44:56.296 [main] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-06-28 14:44:56.297 [main] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-28 14:44:56.636 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-28 14:44:57.410 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-06-28 14:44:57.421 [main] INFO  c.e.E.EventManageApplication - Started EventManageApplication in 6.595 seconds (process running for 7.211)
+2026-06-28 14:45:19.031 [http-nio-8080-exec-3] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-28 14:45:19.041 [http-nio-8080-exec-3] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-06-28 14:45:19.048 [http-nio-8080-exec-3] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 7 ms
+2026-06-28 14:45:19.379 [http-nio-8080-exec-6] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:19.379 [http-nio-8080-exec-4] INFO  c.e.E.controller.CategoryController - Received request to get all categories
+2026-06-28 14:45:19.380 [http-nio-8080-exec-4] INFO  c.e.E.service.CategoryService - Fetching all categories
+2026-06-28 14:45:19.380 [http-nio-8080-exec-6] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:19.606 [http-nio-8080-exec-7] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:19.606 [http-nio-8080-exec-7] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:19.661 [http-nio-8080-exec-8] INFO  c.e.E.controller.CategoryController - Received request to get all categories
+2026-06-28 14:45:19.669 [http-nio-8080-exec-8] INFO  c.e.E.service.CategoryService - Fetching all categories
+2026-06-28 14:45:42.217 [http-nio-8080-exec-10] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:42.219 [http-nio-8080-exec-10] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:54.088 [http-nio-8080-exec-3] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:54.088 [http-nio-8080-exec-3] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:54.104 [http-nio-8080-exec-1] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:54.106 [http-nio-8080-exec-1] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:54.201 [http-nio-8080-exec-4] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:54.201 [http-nio-8080-exec-4] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:54.443 [http-nio-8080-exec-8] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:54.443 [http-nio-8080-exec-8] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:55.084 [http-nio-8080-exec-5] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:55.091 [http-nio-8080-exec-10] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:55.098 [http-nio-8080-exec-10] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:55.091 [http-nio-8080-exec-5] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:55.797 [http-nio-8080-exec-3] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:55.797 [http-nio-8080-exec-3] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:55.825 [http-nio-8080-exec-1] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:55.827 [http-nio-8080-exec-1] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:55.971 [http-nio-8080-exec-6] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:55.971 [http-nio-8080-exec-6] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:56.676 [http-nio-8080-exec-4] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:56.676 [http-nio-8080-exec-4] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:57.735 [http-nio-8080-exec-8] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:57.735 [http-nio-8080-exec-2] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:57.737 [http-nio-8080-exec-2] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:57.737 [http-nio-8080-exec-8] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:57.832 [http-nio-8080-exec-10] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:57.832 [http-nio-8080-exec-10] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:58.630 [http-nio-8080-exec-1] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:58.630 [http-nio-8080-exec-1] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:58.630 [http-nio-8080-exec-4] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:58.630 [http-nio-8080-exec-4] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:58.694 [http-nio-8080-exec-9] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:58.699 [http-nio-8080-exec-9] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:58.792 [http-nio-8080-exec-2] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:58.792 [http-nio-8080-exec-2] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:45:58.917 [http-nio-8080-exec-10] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:45:58.917 [http-nio-8080-exec-10] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:46:17.771 [http-nio-8080-exec-1] INFO  c.e.E.controller.CategoryController - Received request to get all categories
+2026-06-28 14:46:17.771 [http-nio-8080-exec-1] INFO  c.e.E.service.CategoryService - Fetching all categories
+2026-06-28 14:46:17.771 [http-nio-8080-exec-9] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:46:17.771 [http-nio-8080-exec-9] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:46:17.798 [http-nio-8080-exec-8] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 14:46:17.798 [http-nio-8080-exec-8] INFO  c.e.EventManage.service.ItemService - Fetching all items
+2026-06-28 14:46:17.819 [http-nio-8080-exec-2] INFO  c.e.E.controller.CategoryController - Received request to get all categories
+2026-06-28 14:46:17.819 [http-nio-8080-exec-2] INFO  c.e.E.service.CategoryService - Fetching all categories
+2026-06-28 15:01:27.248 [http-nio-8080-exec-4] INFO  c.e.E.controller.ItemController - Received request to get all items
+2026-06-28 15:01:27.248 [http-nio-8080-exec-4] INFO  c.e.EventManage.service.ItemService - Fetching all items

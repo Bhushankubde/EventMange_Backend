@@ -47,4 +47,9 @@ public class Item {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @com.fasterxml.jackson.annotation.JsonProperty("categoryId")
+    public String getCategoryId() {
+        return category != null ? category.getId() : null;
+    }
 }

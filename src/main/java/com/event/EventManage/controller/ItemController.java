@@ -17,9 +17,11 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Item>>> getAllItems() { 
-        log.info("Received request to get all items");
-        return ResponseEntity.ok(ApiResponse.success(itemService.getAllItems(), "Items retrieved successfully", HttpStatus.OK.value())); 
+    public ResponseEntity<ApiResponse<List<Item>>> getItems(
+            @RequestParam(required = false) String categoryId,
+            @RequestParam(required = false) String search) { 
+        log.info("Received request to get items");
+        return ResponseEntity.ok(ApiResponse.success(itemService.getItems(categoryId, search), "Items retrieved successfully", HttpStatus.OK.value())); 
     }
 
     @GetMapping("/{id}")

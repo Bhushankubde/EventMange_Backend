@@ -13,9 +13,17 @@ import java.util.List;
 public class ItemService {
     private final ItemRepository itemRepository;
     
-    public List<Item> getAllItems() { 
-        log.info("Fetching all items");
-        return itemRepository.findAll(); 
+    public List<Item> getItems(String categoryId, String search) { 
+        log.info("Fetching items with categoryId: {}, search: {}", categoryId, search);
+        if (categoryId != null && !categoryId.isEmpty() && search != null && !search.isEmpty()) {
+            return itemRepository.findByCategoryIdAndNameContainingIgnoreCase(categoryId, search);
+        } else if (categoryId != null && !categoryId.isEmpty()) {
+            return itemRepository.findByCategoryId(categoryId);
+        } else if (search != null && !search.isEmpty()) {
+            return itemRepository.findByNameContainingIgnoreCase(search);
+        } else {
+            return itemRepository.findAll();
+        }
     }
     
     public Item getItemById(String id) {
