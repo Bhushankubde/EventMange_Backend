@@ -22,6 +22,7 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+    private final ItemService itemService;
 
     public List<Booking> getAllBookings() { 
         log.info("Fetching all bookings from database");
@@ -44,6 +45,23 @@ public class BookingService {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
+        // ── Dynamic Availability Check ─────────────────────────────────────────
+        for (BookingItemRequest itemReq : request.getItems()) {
+            boolean available = itemService.checkAvailability(
+                    itemReq.getItemId(),
+                    itemReq.getQuantity(),
+                    request.getEventDate()   // single-day check; update to date range if needed
+            );
+            if (!available) {
+                Item item = itemRepository.findById(itemReq.getItemId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Item not found: " + itemReq.getItemId()));
+                log.warn("Item {} is not available for date {} (qty: {})",
+                        item.getName(), request.getEventDate(), itemReq.getQuantity());
+                throw new BadRequestException(
+                        "Item '" + item.getName() + "' is not available in sufficient quantity for the selected date.");
+            }
+        }
+
         Booking booking = Booking.builder()
                 .user(user)
                 .eventDate(request.getEventDate())
@@ -58,11 +76,6 @@ public class BookingService {
         for (BookingItemRequest itemReq : request.getItems()) {
             Item item = itemRepository.findById(itemReq.getItemId())
                     .orElseThrow(() -> new ResourceNotFoundException("Item not found: " + itemReq.getItemId()));
-            
-            if (item.getStock() < itemReq.getQuantity()) {
-                log.warn("Insufficient stock for item {} (Requested: {}, Available: {})", item.getName(), itemReq.getQuantity(), item.getStock());
-                throw new BadRequestException("Insufficient stock for item: " + item.getName());
-            }
 
             log.info("Reserving {} units of item: {}", itemReq.getQuantity(), item.getName());
             item.setStock(item.getStock() - itemReq.getQuantity());
