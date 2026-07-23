@@ -37,4 +37,13 @@ public class BookingController {
         Booking booking = bookingService.createBooking(request, userEmail);
         return new ResponseEntity<>(ApiResponse.success(booking, "Booking created successfully", HttpStatus.CREATED.value()), HttpStatus.CREATED);
     }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<ApiResponse<Booking>> updateBookingStatus(
+            @PathVariable String id,
+            @RequestParam String status) {
+        log.info("Received request to update booking status for ID: {} to {}", id, status);
+        Booking booking = bookingService.updateBookingStatus(id, status);
+        return ResponseEntity.ok(ApiResponse.success(booking, "Booking status updated successfully", HttpStatus.OK.value()));
+    }
 }
