@@ -99,4 +99,13 @@ public class BookingService {
         log.info("Booking created successfully with ID: {} and Total Amount: {}", savedBooking.getId(), totalAmount);
         return savedBooking;
     }
+
+    @Transactional
+    public Booking updateBookingStatus(String id, String status) {
+        log.info("Updating status of booking ID: {} to {}", id, status);
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+        booking.setStatus(BookingStatus.valueOf(status.toUpperCase()));
+        return bookingRepository.save(booking);
+    }
 }
