@@ -42,7 +42,6 @@ public class OfflineSaleService {
         OfflineSale sale = OfflineSale.builder()
                 .customer(customer)
                 .paymentMethod(request.getPaymentMethod())
-                .paymentStatus(PaymentStatus.valueOf(request.getPaymentStatus().toUpperCase()))
                 .rentalStartDate(request.getRentalStartDate())
                 .rentalEndDate(request.getRentalEndDate())
                 .depositAmount(request.getDepositAmount())
@@ -80,8 +79,62 @@ public class OfflineSaleService {
         }
 
         sale.setTotalAmount(totalAmount);
+
+        BigDecimal paid = request.getPaidAmount() != null ? request.getPaidAmount() : totalAmount;
+        BigDecimal pending = totalAmount.subtract(paid);
+        sale.setPaidAmount(paid);
+        sale.setPendingAmount(pending.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : pending);
+
+        if (paid.compareTo(BigDecimal.ZERO) == 0) {
+            sale.setPaymentStatus(PaymentStatus.PENDING);
+        } else if (sale.getPendingAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            sale.setPaymentStatus(PaymentStatus.PAID);
+        } else {
+            sale.setPaymentStatus(PaymentStatus.PARTIAL);
+        }
+
+        sale.setRentalStatus("ACTIVE");
+
         OfflineSale savedSale = offlineSaleRepository.save(sale);
         log.info("Offline sale created successfully with ID: {} and Total Amount: {}", savedSale.getId(), totalAmount);
         return savedSale;
+    }
+
+    public List<OfflineSale> getByCustomerId(String customerId) {
+        log.info("Fetching offline sales for customer ID: {}", customerId);
+        return offlineSaleRepository.findByCustomerId(customerId);
+    }
+
+    @Transactional
+    public OfflineSale collectPayment(String id, BigDecimal amountPaid) {
+        log.info("Collecting payment of {} for offline sale: {}", amountPaid, id);
+        OfflineSale sale = getById(id);
+        BigDecimal newPaid = sale.getPaidAmount().add(amountPaid);
+        sale.setPaidAmount(newPaid);
+        BigDecimal newPending = sale.getTotalAmount().subtract(newPaid);
+        if (newPending.compareTo(BigDecimal.ZERO) <= 0) {
+            sale.setPendingAmount(BigDecimal.ZERO);
+            sale.setPaymentStatus(PaymentStatus.PAID);
+        } else {
+            sale.setPendingAmount(newPending);
+            sale.setPaymentStatus(PaymentStatus.PARTIAL);
+        }
+        return offlineSaleRepository.save(sale);
+    }
+
+    @Transactional
+    public OfflineSale markReturned(String id) {
+        log.info("Marking offline sale: {} as returned", id);
+        OfflineSale sale = getById(id);
+        sale.setRentalStatus("RETURNED");
+
+        // Restock items back to inventory
+        for (OfflineSaleItem saleItem : sale.getItems()) {
+            Item item = saleItem.getItem();
+            item.setStock(item.getStock() + saleItem.getQuantity());
+            itemRepository.save(item);
+        }
+
+        return offlineSaleRepository.save(sale);
     }
 }
