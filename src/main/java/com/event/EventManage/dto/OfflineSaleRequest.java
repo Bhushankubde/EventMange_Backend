@@ -13,5 +13,6 @@ public class OfflineSaleRequest {
     private String paymentMethod;
     private String paymentStatus;
     private BigDecimal depositAmount;
+    private BigDecimal paidAmount;
     private String notes;
 }

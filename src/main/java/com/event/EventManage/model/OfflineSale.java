@@ -22,6 +22,7 @@ public class OfflineSale {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
     private WalkInCustomer customer;
@@ -34,7 +35,20 @@ public class OfflineSale {
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(255) DEFAULT 'PENDING'")
+    @Builder.Default
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
+
+    @Column(precision = 10, scale = 2)
+    @Builder.Default
+    private BigDecimal paidAmount = BigDecimal.ZERO;
+
+    @Column(precision = 10, scale = 2)
+    @Builder.Default
+    private BigDecimal pendingAmount = BigDecimal.ZERO;
+
+    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'ACTIVE'")
+    @Builder.Default
+    private String rentalStatus = "ACTIVE";
 
     @Column(nullable = false)
     private LocalDate rentalStartDate;

@@ -22,6 +22,7 @@ public class OfflineSaleItem {
     @com.fasterxml.jackson.annotation.JsonIgnore
     private OfflineSale sale;
 
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
