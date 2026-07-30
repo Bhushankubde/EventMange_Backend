@@ -16,6 +16,7 @@ import java.util.List;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final BookingRepository bookingRepository;
+    private final NotificationService notificationService;
 
     public List<Order> getAllOrders() { 
         log.info("Fetching all orders");
@@ -47,6 +48,15 @@ public class OrderService {
         
         Order savedOrder = orderRepository.save(order);
         log.info("Order created successfully with ID: {}", savedOrder.getId());
+        try {
+            notificationService.sendNotification(
+                "New Payment received: Order #" + savedOrder.getId().substring(0, 6).toUpperCase() + 
+                " for Booking ID #" + bookingId.substring(0, 6).toUpperCase() + " (Amount: ₹" + savedOrder.getTotalAmount() + ")",
+                "SUCCESS"
+            );
+        } catch (Exception e) {
+            log.error("Failed to send online order payment notification", e);
+        }
         return savedOrder;
     }
 }

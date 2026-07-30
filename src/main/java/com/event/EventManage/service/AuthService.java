@@ -27,6 +27,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
     private final RefreshTokenService refreshTokenService;
+    private final NotificationService notificationService;
 
     public AuthResponse login(LoginRequest loginRequest) {
         log.info("Authenticating user: {}", loginRequest.getEmail());
@@ -61,6 +62,14 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
         log.info("User registered successfully with ID: {}", savedUser.getId());
+        try {
+            notificationService.sendNotification(
+                "New user registered: " + savedUser.getFirstName() + " " + savedUser.getLastName() + " (" + savedUser.getEmail() + ")",
+                "SUCCESS"
+            );
+        } catch (Exception e) {
+            log.error("Failed to send user registration notification", e);
+        }
         return savedUser;
     }
 }
