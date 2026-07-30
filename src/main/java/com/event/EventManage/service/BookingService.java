@@ -23,6 +23,7 @@ public class BookingService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final ItemService itemService;
+    private final NotificationService notificationService;
 
     public List<Booking> getAllBookings() { 
         log.info("Fetching all bookings from database");
@@ -45,23 +46,6 @@ public class BookingService {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        // ── Dynamic Availability Check ─────────────────────────────────────────
-        for (BookingItemRequest itemReq : request.getItems()) {
-            boolean available = itemService.checkAvailability(
-                    itemReq.getItemId(),
-                    itemReq.getQuantity(),
-                    request.getEventDate()   // single-day check; update to date range if needed
-            );
-            if (!available) {
-                Item item = itemRepository.findById(itemReq.getItemId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Item not found: " + itemReq.getItemId()));
-                log.warn("Item {} is not available for date {} (qty: {})",
-                        item.getName(), request.getEventDate(), itemReq.getQuantity());
-                throw new BadRequestException(
-                        "Item '" + item.getName() + "' is not available in sufficient quantity for the selected date.");
-            }
-        }
-
         Booking booking = Booking.builder()
                 .user(user)
                 .eventDate(request.getEventDate())
@@ -74,20 +58,37 @@ public class BookingService {
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         for (BookingItemRequest itemReq : request.getItems()) {
-            Item item = itemRepository.findById(itemReq.getItemId())
+            Item item = itemRepository.findByIdForUpdate(itemReq.getItemId())
                     .orElseThrow(() -> new ResourceNotFoundException("Item not found: " + itemReq.getItemId()));
 
-            log.info("Reserving {} units of item: {}", itemReq.getQuantity(), item.getName());
-            item.setStock(item.getStock() - itemReq.getQuantity());
-            itemRepository.save(item);
+            int available = item.getAvailableQuantity() != null ? item.getAvailableQuantity() : 0;
+            int requested = itemReq.getQuantity();
 
-            BigDecimal itemTotal = item.getPrice().multiply(BigDecimal.valueOf(itemReq.getQuantity()));
+            if (available <= 0) {
+                throw new BadRequestException("Item '" + item.getName() + "' is out of stock.");
+            }
+            if (available < requested) {
+                throw new BadRequestException("Only " + available + " units are available for '" + item.getName() + "'.");
+            }
+
+            log.info("Reserving {} units of item: {}", requested, item.getName());
+            item.setAvailableQuantity(available - requested);
+            item.setStock(available - requested);
+            itemRepository.save(item);
+            
+            try {
+                notificationService.broadcastInventoryUpdate(item.getId(), item.getAvailableQuantity());
+            } catch (Exception e) {
+                log.error("Failed to broadcast inventory update", e);
+            }
+
+            BigDecimal itemTotal = item.getPrice().multiply(BigDecimal.valueOf(requested));
             totalAmount = totalAmount.add(itemTotal);
 
             BookingItem bookingItem = BookingItem.builder()
                     .booking(booking)
                     .item(item)
-                    .quantity(itemReq.getQuantity())
+                    .quantity(requested)
                     .price(item.getPrice())
                     .build();
             
@@ -97,6 +98,15 @@ public class BookingService {
         booking.setTotalAmount(totalAmount);
         Booking savedBooking = bookingRepository.save(booking);
         log.info("Booking created successfully with ID: {} and Total Amount: {}", savedBooking.getId(), totalAmount);
+        try {
+            notificationService.sendNotification(
+                "New Online Booking created: ID #" + savedBooking.getId().substring(0, 6).toUpperCase() + 
+                " by " + user.getFirstName() + " " + user.getLastName() + " (Total: ₹" + totalAmount + ")",
+                "INFO"
+            );
+        } catch (Exception e) {
+            log.error("Failed to send online booking notification", e);
+        }
         return savedBooking;
     }
 
@@ -105,7 +115,57 @@ public class BookingService {
         log.info("Updating status of booking ID: {} to {}", id, status);
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
-        booking.setStatus(BookingStatus.valueOf(status.toUpperCase()));
+        
+        BookingStatus newStatus = BookingStatus.valueOf(status.toUpperCase());
+        BookingStatus oldStatus = booking.getStatus();
+        
+        if (newStatus != oldStatus) {
+            booking.setStatus(newStatus);
+            
+            boolean isNewRestocked = newStatus == BookingStatus.CANCELLED || newStatus == BookingStatus.COMPLETED;
+            boolean isOldRestocked = oldStatus == BookingStatus.CANCELLED || oldStatus == BookingStatus.COMPLETED;
+            
+            if (isNewRestocked && !isOldRestocked) {
+                // Restock items
+                for (BookingItem bookingItem : booking.getItems()) {
+                    Item item = itemRepository.findByIdForUpdate(bookingItem.getItem().getId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Item not found"));
+                    int currentAvailable = item.getAvailableQuantity() != null ? item.getAvailableQuantity() : 0;
+                    item.setAvailableQuantity(currentAvailable + bookingItem.getQuantity());
+                    item.setStock(currentAvailable + bookingItem.getQuantity());
+                    itemRepository.save(item);
+                    
+                    try {
+                        notificationService.broadcastInventoryUpdate(item.getId(), item.getAvailableQuantity());
+                    } catch (Exception e) {
+                        log.error("Failed to broadcast inventory update", e);
+                    }
+                }
+            } else if (!isNewRestocked && isOldRestocked) {
+                // Deduct items (Re-opening booking)
+                for (BookingItem bookingItem : booking.getItems()) {
+                    Item item = itemRepository.findByIdForUpdate(bookingItem.getItem().getId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Item not found"));
+                    int currentAvailable = item.getAvailableQuantity() != null ? item.getAvailableQuantity() : 0;
+                    int requested = bookingItem.getQuantity();
+                    
+                    if (currentAvailable < requested) {
+                        throw new BadRequestException("Cannot reopen booking: Item '" + item.getName() + "' does not have enough available stock.");
+                    }
+                    
+                    item.setAvailableQuantity(currentAvailable - requested);
+                    item.setStock(currentAvailable - requested);
+                    itemRepository.save(item);
+                    
+                    try {
+                        notificationService.broadcastInventoryUpdate(item.getId(), item.getAvailableQuantity());
+                    } catch (Exception e) {
+                        log.error("Failed to broadcast inventory update", e);
+                    }
+                }
+            }
+        }
+        
         return bookingRepository.save(booking);
     }
 }

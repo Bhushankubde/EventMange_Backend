@@ -4,6 +4,7 @@ import com.event.EventManage.dto.ApiResponse;
 import com.event.EventManage.model.*;
 import com.event.EventManage.repository.*;
 import com.event.EventManage.exception.ResourceNotFoundException;
+import com.event.EventManage.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ public class AdminPortalController {
     private final ActivityLogRepository activityLogRepository;
     private final SystemSettingRepository systemSettingRepository;
     private final ReviewRepository reviewRepository;
+    private final NotificationService notificationService;
 
     // ==========================================
     // USER MANAGEMENT
@@ -47,7 +49,16 @@ public class AdminPortalController {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         
-        user.setRole(Role.valueOf(role.toUpperCase()));
+        if (user.getEmail().equalsIgnoreCase("admin@eventdeco.com")) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Modifying the primary administrator account role is not permitted.", HttpStatus.BAD_REQUEST.value()));
+        }
+
+        Role targetRole = Role.valueOf(role.toUpperCase());
+        if (targetRole == Role.ADMIN) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Creation of additional administrator accounts is not permitted.", HttpStatus.BAD_REQUEST.value()));
+        }
+
+        user.setRole(targetRole);
         User updated = userRepository.save(user);
 
         // Audit Log
@@ -197,7 +208,7 @@ public class AdminPortalController {
 
     @PostMapping("/notifications")
     public ResponseEntity<ApiResponse<Notification>> createNotification(@RequestBody Notification notification, Authentication auth) {
-        Notification saved = notificationRepository.save(notification);
+        Notification saved = notificationService.sendNotification(notification.getMessage(), notification.getType());
         return new ResponseEntity<>(ApiResponse.success(saved, "Notification created", HttpStatus.CREATED.value()), HttpStatus.CREATED);
     }
 
@@ -209,6 +220,15 @@ public class AdminPortalController {
         }
         notificationRepository.saveAll(list);
         return ResponseEntity.ok(ApiResponse.success(null, "All notifications marked as read", HttpStatus.OK.value()));
+    }
+
+    @PutMapping("/notifications/{id}/read")
+    public ResponseEntity<ApiResponse<Notification>> markAsRead(@PathVariable String id) {
+        Notification notification = notificationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Notification not found"));
+        notification.setReadStatus(true);
+        Notification updated = notificationRepository.save(notification);
+        return ResponseEntity.ok(ApiResponse.success(updated, "Notification marked as read", HttpStatus.OK.value()));
     }
 
     @DeleteMapping("/notifications/{id}")

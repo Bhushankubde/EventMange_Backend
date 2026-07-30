@@ -19,6 +19,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
     private final BookingRepository bookingRepository;
+    private final NotificationService notificationService;
     
     public List<Item> getAllItems() { 
         log.info("Fetching all items");
@@ -68,6 +69,12 @@ public class ItemService {
         if (item.getAvailable() == null) {
             item.setAvailable(true);
         }
+        if (item.getTotalQuantity() == null || item.getTotalQuantity() == 0) {
+            item.setTotalQuantity(item.getStock() != null ? item.getStock() : 0);
+        }
+        if (item.getAvailableQuantity() == null || item.getAvailableQuantity() == 0) {
+            item.setAvailableQuantity(item.getStock() != null ? item.getStock() : 0);
+        }
         
         String catId = item.getTempCategoryId();
         if (catId == null && item.getCategory() != null) {
@@ -79,7 +86,13 @@ public class ItemService {
             item.setCategory(category);
         }
         
-        return itemRepository.save(item); 
+        Item saved = itemRepository.save(item);
+        try {
+            notificationService.broadcastInventoryUpdate(saved.getId(), saved.getAvailableQuantity());
+        } catch (Exception e) {
+            log.error("Failed to broadcast inventory update on item creation", e);
+        }
+        return saved; 
     }
     
     public Item updateItem(String id, Item updatedItem) {
@@ -88,7 +101,15 @@ public class ItemService {
         item.setName(updatedItem.getName());
         item.setDescription(updatedItem.getDescription());
         item.setPrice(updatedItem.getPrice());
-        item.setStock(updatedItem.getStock());
+        
+        int newTotal = updatedItem.getStock() != null ? updatedItem.getStock() : 0;
+        int oldTotal = item.getTotalQuantity() != null ? item.getTotalQuantity() : 0;
+        int diff = newTotal - oldTotal;
+        
+        item.setTotalQuantity(newTotal);
+        item.setAvailableQuantity((item.getAvailableQuantity() != null ? item.getAvailableQuantity() : 0) + diff);
+        item.setStock(item.getAvailableQuantity());
+        
         item.setImageUrl(updatedItem.getImageUrl());
         item.setAvailable(updatedItem.getAvailable());
         
@@ -104,7 +125,13 @@ public class ItemService {
             item.setCategory(null);
         }
         
-        return itemRepository.save(item);
+        Item saved = itemRepository.save(item);
+        try {
+            notificationService.broadcastInventoryUpdate(saved.getId(), saved.getAvailableQuantity());
+        } catch (Exception e) {
+            log.error("Failed to broadcast inventory update on item update", e);
+        }
+        return saved;
     }
     
     public void deleteItem(String id) { 
@@ -113,30 +140,12 @@ public class ItemService {
     }
 
     /**
-     * Check if an item has enough available stock for the given date range,
-     * accounting for existing non-cancelled bookings.
-     *
-     * @param itemId    the item to check
-     * @param quantity  the requested quantity
-     * @param startDate the start date of the event
-     * @param endDate   the end date of the event (inclusive)
-     * @return true if available, false otherwise
+     * Check if an item has enough available stock.
      */
     public boolean checkAvailability(String itemId, int quantity, LocalDate startDate, LocalDate endDate) {
         log.info("Checking availability for item {} (qty: {}) between {} and {}", itemId, quantity, startDate, endDate);
         Item item = getItemById(itemId);
-
-        // Check raw stock first
-        if (item.getStock() < quantity) {
-            log.warn("Item {} has only {} units in stock, requested {}", itemId, item.getStock(), quantity);
-            return false;
-        }
-
-        // Deduct already-booked quantities for the given date range
-        Long reserved = bookingRepository.findReservedQuantityForItemInDateRange(itemId, startDate, endDate);
-        long available = item.getStock() - (reserved != null ? reserved : 0L);
-
-        log.info("Item {} - Stock: {}, Reserved: {}, Available: {}", itemId, item.getStock(), reserved, available);
+        int available = item.getAvailableQuantity() != null ? item.getAvailableQuantity() : 0;
         return available >= quantity;
     }
 

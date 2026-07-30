@@ -22,6 +22,7 @@ public class OfflineSaleService {
     private final OfflineSaleRepository offlineSaleRepository;
     private final WalkInCustomerRepository customerRepository;
     private final ItemRepository itemRepository;
+    private final NotificationService notificationService;
 
     public List<OfflineSale> getAll() { 
         log.info("Fetching all offline sales");
@@ -53,25 +54,37 @@ public class OfflineSaleService {
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         for (SaleItemRequest itemReq : request.getItems()) {
-            Item item = itemRepository.findById(itemReq.getItemId())
+            Item item = itemRepository.findByIdForUpdate(itemReq.getItemId())
                     .orElseThrow(() -> new ResourceNotFoundException("Item not found: " + itemReq.getItemId()));
 
-            if (item.getStock() < itemReq.getQuantity()) {
-                log.warn("Insufficient stock for item {} (Requested: {}, Available: {})", item.getName(), itemReq.getQuantity(), item.getStock());
-                throw new BadRequestException("Insufficient stock for item: " + item.getName());
+            int available = item.getAvailableQuantity() != null ? item.getAvailableQuantity() : 0;
+            int requested = itemReq.getQuantity();
+
+            if (available <= 0) {
+                throw new BadRequestException("Item '" + item.getName() + "' is out of stock.");
+            }
+            if (available < requested) {
+                throw new BadRequestException("Only " + available + " units are available for '" + item.getName() + "'.");
             }
 
-            log.info("Reserving {} units of item: {}", itemReq.getQuantity(), item.getName());
-            item.setStock(item.getStock() - itemReq.getQuantity());
+            log.info("Reserving {} units of item: {}", requested, item.getName());
+            item.setAvailableQuantity(available - requested);
+            item.setStock(available - requested);
             itemRepository.save(item);
+            
+            try {
+                notificationService.broadcastInventoryUpdate(item.getId(), item.getAvailableQuantity());
+            } catch (Exception e) {
+                log.error("Failed to broadcast inventory update", e);
+            }
 
-            BigDecimal itemTotal = item.getPrice().multiply(BigDecimal.valueOf(itemReq.getQuantity()));
+            BigDecimal itemTotal = item.getPrice().multiply(BigDecimal.valueOf(requested));
             totalAmount = totalAmount.add(itemTotal);
 
             OfflineSaleItem saleItem = OfflineSaleItem.builder()
                     .sale(sale)
                     .item(item)
-                    .quantity(itemReq.getQuantity())
+                    .quantity(requested)
                     .price(item.getPrice())
                     .build();
 
@@ -97,6 +110,15 @@ public class OfflineSaleService {
 
         OfflineSale savedSale = offlineSaleRepository.save(sale);
         log.info("Offline sale created successfully with ID: {} and Total Amount: {}", savedSale.getId(), totalAmount);
+        try {
+            notificationService.sendNotification(
+                "New Offline Rental logged: Invoice #" + savedSale.getId().substring(0, 6).toUpperCase() + 
+                " for " + customer.getFirstName() + " " + customer.getLastName() + " (Total: ₹" + totalAmount + ")",
+                "INFO"
+            );
+        } catch (Exception e) {
+            log.error("Failed to send offline sale notification", e);
+        }
         return savedSale;
     }
 
@@ -126,13 +148,25 @@ public class OfflineSaleService {
     public OfflineSale markReturned(String id) {
         log.info("Marking offline sale: {} as returned", id);
         OfflineSale sale = getById(id);
-        sale.setRentalStatus("RETURNED");
+        
+        if (!"RETURNED".equalsIgnoreCase(sale.getRentalStatus())) {
+            sale.setRentalStatus("RETURNED");
 
-        // Restock items back to inventory
-        for (OfflineSaleItem saleItem : sale.getItems()) {
-            Item item = saleItem.getItem();
-            item.setStock(item.getStock() + saleItem.getQuantity());
-            itemRepository.save(item);
+            // Restock items back to inventory
+            for (OfflineSaleItem saleItem : sale.getItems()) {
+                Item item = itemRepository.findByIdForUpdate(saleItem.getItem().getId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Item not found"));
+                int currentAvailable = item.getAvailableQuantity() != null ? item.getAvailableQuantity() : 0;
+                item.setAvailableQuantity(currentAvailable + saleItem.getQuantity());
+                item.setStock(currentAvailable + saleItem.getQuantity());
+                itemRepository.save(item);
+                
+                try {
+                    notificationService.broadcastInventoryUpdate(item.getId(), item.getAvailableQuantity());
+                } catch (Exception e) {
+                    log.error("Failed to broadcast inventory update", e);
+                }
+            }
         }
 
         return offlineSaleRepository.save(sale);
