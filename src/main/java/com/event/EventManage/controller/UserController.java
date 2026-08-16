@@ -4,10 +4,13 @@ import com.event.EventManage.dto.ApiResponse;
 import com.event.EventManage.dto.UpdateProfileRequest;
 import com.event.EventManage.dto.UserProfileResponse;
 import com.event.EventManage.model.User;
+import com.event.EventManage.model.Notification;
 import com.event.EventManage.repository.UserRepository;
+import com.event.EventManage.repository.NotificationRepository;
 import com.event.EventManage.service.ImageUploadService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +27,18 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final ImageUploadService imageUploadService;
+    private final NotificationRepository notificationRepository;
+
+    @GetMapping("/notifications")
+    public ResponseEntity<ApiResponse<List<Notification>>> getNotifications(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.error("Unauthorized", HttpStatus.UNAUTHORIZED.value()));
+        }
+        log.info("Fetching notifications for authenticated user: {}", authentication.getName());
+        List<Notification> notifications = notificationRepository.findByOrderByCreatedAtDesc();
+        return ResponseEntity.ok(ApiResponse.success(notifications, "Notifications retrieved successfully", HttpStatus.OK.value()));
+    }
 
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserProfileResponse>> getCurrentUser(Authentication authentication) {

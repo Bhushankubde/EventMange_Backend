@@ -40,6 +40,21 @@ public class Booking {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
+    @Column(name = "full_name")
+    private String fullName;
+
+    @Column(name = "whatsapp_number")
+    private String whatsAppNumber;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "additional_notes", length = 1000)
+    private String additionalNotes;
+
+    @Column(name = "booking_number", unique = true)
+    private String bookingNumber;
+
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(255) DEFAULT 'PENDING'")
     private BookingStatus status = BookingStatus.PENDING;

@@ -11,4 +11,8 @@ public class BookingRequest {
     private LocalDate eventDate;
     private LocalTime eventTime;
     private String eventLocation;
+    private String fullName;
+    private String whatsAppNumber;
+    private String email;
+    private String additionalNotes;
 }

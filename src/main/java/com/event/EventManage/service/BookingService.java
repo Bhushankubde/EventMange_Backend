@@ -39,6 +39,16 @@ public class BookingService {
         log.info("Fetching bookings for user ID: {}", userId);
         return bookingRepository.findByUserId(userId);
     }
+
+    public List<Booking> getBookingsForUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (user.getRole() == Role.ADMIN || user.getRole() == Role.STAFF) {
+            return bookingRepository.findAll();
+        } else {
+            return bookingRepository.findByUserId(user.getId());
+        }
+    }
     
     @Transactional
     public Booking createBooking(BookingRequest request, String userEmail) {
@@ -46,11 +56,38 @@ public class BookingService {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
+        // Generate a human-friendly unique booking number
+        String rawName = request.getFullName();
+        String firstNameClean = "GUEST";
+        if (rawName != null && !rawName.trim().isEmpty()) {
+            String firstPart = rawName.trim().split("\\s+")[0];
+            firstNameClean = firstPart.replaceAll("[^a-zA-Z]", "").toUpperCase();
+        } else if (user.getFirstName() != null && !user.getFirstName().trim().isEmpty()) {
+            firstNameClean = user.getFirstName().trim().replaceAll("[^a-zA-Z]", "").toUpperCase();
+        }
+        if (firstNameClean.isEmpty()) {
+            firstNameClean = "GUEST";
+        }
+
+        long count = bookingRepository.count() + 1;
+        String bookingNumber = "EVD-" + firstNameClean + "-" + String.format("%04d", count);
+        int safetyCheck = 0;
+        while (bookingRepository.existsByBookingNumber(bookingNumber) && safetyCheck < 100) {
+            count++;
+            bookingNumber = "EVD-" + firstNameClean + "-" + String.format("%04d", count);
+            safetyCheck++;
+        }
+
         Booking booking = Booking.builder()
                 .user(user)
                 .eventDate(request.getEventDate())
                 .eventTime(request.getEventTime())
                 .eventLocation(request.getEventLocation())
+                .fullName(request.getFullName())
+                .whatsAppNumber(request.getWhatsAppNumber())
+                .email(request.getEmail())
+                .additionalNotes(request.getAdditionalNotes())
+                .bookingNumber(bookingNumber)
                 .status(BookingStatus.PENDING)
                 .items(new ArrayList<>())
                 .build();
@@ -97,11 +134,11 @@ public class BookingService {
 
         booking.setTotalAmount(totalAmount);
         Booking savedBooking = bookingRepository.save(booking);
-        log.info("Booking created successfully with ID: {} and Total Amount: {}", savedBooking.getId(), totalAmount);
+        log.info("Booking created successfully with ID: {} and Booking Number: {}", savedBooking.getId(), savedBooking.getBookingNumber());
         try {
             notificationService.sendNotification(
-                "New Online Booking created: ID #" + savedBooking.getId().substring(0, 6).toUpperCase() + 
-                " by " + user.getFirstName() + " " + user.getLastName() + " (Total: ₹" + totalAmount + ")",
+                "New Booking Request: #" + savedBooking.getBookingNumber() + 
+                " by " + savedBooking.getFullName() + " (Total: ₹" + totalAmount + ")",
                 "INFO"
             );
         } catch (Exception e) {
@@ -122,8 +159,8 @@ public class BookingService {
         if (newStatus != oldStatus) {
             booking.setStatus(newStatus);
             
-            boolean isNewRestocked = newStatus == BookingStatus.CANCELLED || newStatus == BookingStatus.COMPLETED;
-            boolean isOldRestocked = oldStatus == BookingStatus.CANCELLED || oldStatus == BookingStatus.COMPLETED;
+            boolean isNewRestocked = newStatus == BookingStatus.REJECTED || newStatus == BookingStatus.CANCELLED;
+            boolean isOldRestocked = oldStatus == BookingStatus.REJECTED || oldStatus == BookingStatus.CANCELLED;
             
             if (isNewRestocked && !isOldRestocked) {
                 // Restock items

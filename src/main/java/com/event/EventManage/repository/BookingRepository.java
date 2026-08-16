@@ -15,6 +15,8 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
 
     List<Booking> findByStatus(BookingStatus status);
 
+    boolean existsByBookingNumber(String bookingNumber);
+
     /**
      * Returns the total quantity of an item already reserved in bookings
      * that overlap with the given date range, excluding CANCELLED bookings.
@@ -26,7 +28,7 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
         FROM BookingItem bi
         JOIN bi.booking b
         WHERE bi.item.id = :itemId
-          AND b.status <> com.event.EventManage.model.BookingStatus.CANCELLED
+          AND b.status <> com.event.EventManage.model.BookingStatus.REJECTED
           AND b.eventDate BETWEEN :startDate AND :endDate
         """)
     Long findReservedQuantityForItemInDateRange(
