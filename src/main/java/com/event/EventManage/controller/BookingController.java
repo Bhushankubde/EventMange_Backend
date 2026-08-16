@@ -19,9 +19,10 @@ public class BookingController {
     private final BookingService bookingService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Booking>>> getAllBookings() {
-        log.info("Received request to get all bookings");
-        return ResponseEntity.ok(ApiResponse.success(bookingService.getAllBookings(), "Bookings retrieved successfully", HttpStatus.OK.value()));
+    public ResponseEntity<ApiResponse<List<Booking>>> getAllBookings(org.springframework.security.core.Authentication authentication) {
+        String email = authentication.getName();
+        log.info("Received request to get bookings for user: {}", email);
+        return ResponseEntity.ok(ApiResponse.success(bookingService.getBookingsForUser(email), "Bookings retrieved successfully", HttpStatus.OK.value()));
     }
 
     @GetMapping("/{id}")

@@ -43,7 +43,7 @@ public class OrderService {
             .status("COMPLETED")
             .build();
             
-        booking.setStatus(com.event.EventManage.model.BookingStatus.CONFIRMED);
+        booking.setStatus(com.event.EventManage.model.BookingStatus.APPROVED);
         bookingRepository.save(booking);
         
         Order savedOrder = orderRepository.save(order);

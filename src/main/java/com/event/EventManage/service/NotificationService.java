@@ -25,6 +25,7 @@ public class NotificationService {
                 .message(message)
                 .type(type)
                 .readStatus(false)
+                .createdAt(LocalDateTime.now())
                 .build();
 
         Notification saved = notificationRepository.save(notification);

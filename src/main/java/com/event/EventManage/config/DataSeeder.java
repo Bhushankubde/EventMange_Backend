@@ -3,8 +3,10 @@ package com.event.EventManage.config;
 import com.event.EventManage.model.Role;
 import com.event.EventManage.model.User;
 import com.event.EventManage.model.Item;
+import com.event.EventManage.model.SystemSetting;
 import com.event.EventManage.repository.UserRepository;
 import com.event.EventManage.repository.ItemRepository;
+import com.event.EventManage.repository.SystemSettingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -20,6 +22,7 @@ public class DataSeeder implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+    private final SystemSettingRepository systemSettingRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -33,9 +36,20 @@ public class DataSeeder implements CommandLineRunner {
                     .phone("1234567890")
                     .role(Role.ADMIN)
                     .build();
-            
+
             userRepository.save(admin);
             log.info("Default Admin user created! Email: admin@eventdeco.com | Password: Admin@123");
+        }
+
+        // Seed default WhatsApp number if missing
+        if (systemSettingRepository.findBySettingKey("whatsapp_number").isEmpty()) {
+            SystemSetting whatsappSetting = SystemSetting.builder()
+                    .settingKey("whatsapp_number")
+                    .settingValue("911234568751")
+                    .description("Store WhatsApp number for client booking redirections (e.g. 919876543210)")
+                    .build();
+            systemSettingRepository.save(whatsappSetting);
+            log.info("Default WhatsApp number setting seeded: 919876543210");
         }
 
         // Migrate old stock to totalQuantity and availableQuantity
@@ -54,7 +68,8 @@ public class DataSeeder implements CommandLineRunner {
                 updated = true;
             }
             if (updated) {
-                log.info("Migrated stock data for item: {} (Total: {}, Available: {})", item.getName(), item.getTotalQuantity(), item.getAvailableQuantity());
+                log.info("Migrated stock data for item: {} (Total: {}, Available: {})", item.getName(),
+                        item.getTotalQuantity(), item.getAvailableQuantity());
                 itemRepository.save(item);
             }
         }
